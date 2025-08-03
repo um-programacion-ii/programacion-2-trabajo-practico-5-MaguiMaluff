@@ -219,7 +219,7 @@ Desarrollar un sistema de gestión de empleados utilizando Spring Boot con JPA, 
 
 ### Diagrama de Secuencia: Registrar Empleado
 ```
-Cliente HTTP          EmpleadoController    EmpleadoService    EmpleadoRepository    Base de Datos
+Cliente HTTP          EmpleadoController    EmpleadoService    repositorios.EmpleadoRepository    Base de Datos
      |                       |                     |                    |                    |
      | POST /api/empleados   |                     |                    |                    |
      |---------------------->|                     |                    |                    |
@@ -250,7 +250,7 @@ Cliente HTTP          EmpleadoController    EmpleadoService    EmpleadoRepositor
 
 ### Diagrama de Secuencia: Consultar Empleados por Departamento
 ```
-Cliente HTTP          EmpleadoController    EmpleadoService    EmpleadoRepository    Base de Datos
+Cliente HTTP          EmpleadoController    EmpleadoService    repositorios.EmpleadoRepository    Base de Datos
      |                       |                     |                    |                    |
      | GET /api/empleados/   |                     |                    |                    |
      | departamento/{nombre} |                     |                    |                    |
@@ -437,7 +437,7 @@ public class Proyecto {
 
 #### Tareas
 1. Crear interfaces de repositorio:
-   - `EmpleadoRepository`
+   - `repositorios.EmpleadoRepository`
    - `DepartamentoRepository`
    - `ProyectoRepository`
 
@@ -458,7 +458,7 @@ public class Proyecto {
 #### Ejemplo de Implementación
 ```java
 @Repository
-public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
+public interface repositorios.EmpleadoRepository extends JpaRepository<Empleado, Long> {
     Optional<Empleado> findByEmail(String email);
     List<Empleado> findByDepartamento(Departamento departamento);
     List<Empleado> findBySalarioBetween(BigDecimal salarioMin, BigDecimal salarioMax);
@@ -487,10 +487,10 @@ public interface EmpleadoService {
 @Service
 @Transactional
 public class EmpleadoServiceImpl implements EmpleadoService {
-    private final EmpleadoRepository empleadoRepository;
+    private final repositorios.EmpleadoRepository empleadoRepository;
     private final DepartamentoRepository departamentoRepository;
     
-    public EmpleadoServiceImpl(EmpleadoRepository empleadoRepository, 
+    public EmpleadoServiceImpl(repositorios.EmpleadoRepository empleadoRepository, 
                               DepartamentoRepository departamentoRepository) {
         this.empleadoRepository = empleadoRepository;
         this.departamentoRepository = departamentoRepository;
@@ -770,61 +770,64 @@ networks:
 ```
 
 #### Ejemplo de Test
+
 ```java
+import repositorios.EmpleadoRepository;
+
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
 class EmpleadoServiceIntegrationTest {
-    private final EmpleadoService empleadoService;
-    private final EmpleadoRepository empleadoRepository;
-    private final DepartamentoRepository departamentoRepository;
-    
-    public EmpleadoServiceIntegrationTest(EmpleadoService empleadoService,
-                                        EmpleadoRepository empleadoRepository,
-                                        DepartamentoRepository departamentoRepository) {
-        this.empleadoService = empleadoService;
-        this.empleadoRepository = empleadoRepository;
-        this.departamentoRepository = departamentoRepository;
-    }
-    
-    @Test
-    void cuandoGuardarEmpleado_entoncesSePersisteCorrectamente() {
-        // Arrange
-        Departamento departamento = new Departamento();
-        departamento.setNombre("IT");
-        departamento.setDescripcion("Departamento de Tecnología");
-        departamento = departamentoRepository.save(departamento);
-        
-        Empleado empleado = new Empleado();
-        empleado.setNombre("Juan");
-        empleado.setApellido("Pérez");
-        empleado.setEmail("juan.perez@empresa.com");
-        empleado.setFechaContratacion(LocalDate.now());
-        empleado.setSalario(new BigDecimal("50000.00"));
-        empleado.setDepartamento(departamento);
-        
-        // Act
-        Empleado empleadoGuardado = empleadoService.guardar(empleado);
-        
-        // Assert
-        assertNotNull(empleadoGuardado.getId());
-        assertEquals("juan.perez@empresa.com", empleadoGuardado.getEmail());
-        assertTrue(empleadoRepository.existsById(empleadoGuardado.getId()));
-    }
-    
-    @Test
-    void cuandoBuscarPorEmailExistente_entoncesRetornaEmpleado() {
-        // Arrange
-        Empleado empleado = crearEmpleadoDePrueba();
-        empleadoRepository.save(empleado);
-        
-        // Act
-        Optional<Empleado> resultado = empleadoRepository.findByEmail("test@empresa.com");
-        
-        // Assert
-        assertTrue(resultado.isPresent());
-        assertEquals("test@empresa.com", resultado.get().getEmail());
-    }
+   private final EmpleadoService empleadoService;
+   private final EmpleadoRepository empleadoRepository;
+   private final DepartamentoRepository departamentoRepository;
+
+   public EmpleadoServiceIntegrationTest(EmpleadoService empleadoService,
+                                         EmpleadoRepository empleadoRepository,
+                                         DepartamentoRepository departamentoRepository) {
+      this.empleadoService = empleadoService;
+      this.empleadoRepository = empleadoRepository;
+      this.departamentoRepository = departamentoRepository;
+   }
+
+   @Test
+   void cuandoGuardarEmpleado_entoncesSePersisteCorrectamente() {
+      // Arrange
+      Departamento departamento = new Departamento();
+      departamento.setNombre("IT");
+      departamento.setDescripcion("Departamento de Tecnología");
+      departamento = departamentoRepository.save(departamento);
+
+      Empleado empleado = new Empleado();
+      empleado.setNombre("Juan");
+      empleado.setApellido("Pérez");
+      empleado.setEmail("juan.perez@empresa.com");
+      empleado.setFechaContratacion(LocalDate.now());
+      empleado.setSalario(new BigDecimal("50000.00"));
+      empleado.setDepartamento(departamento);
+
+      // Act
+      Empleado empleadoGuardado = empleadoService.guardar(empleado);
+
+      // Assert
+      assertNotNull(empleadoGuardado.getId());
+      assertEquals("juan.perez@empresa.com", empleadoGuardado.getEmail());
+      assertTrue(empleadoRepository.existsById(empleadoGuardado.getId()));
+   }
+
+   @Test
+   void cuandoBuscarPorEmailExistente_entoncesRetornaEmpleado() {
+      // Arrange
+      Empleado empleado = crearEmpleadoDePrueba();
+      empleadoRepository.save(empleado);
+
+      // Act
+      Optional<Empleado> resultado = empleadoRepository.findByEmail("test@empresa.com");
+
+      // Assert
+      assertTrue(resultado.isPresent());
+      assertEquals("test@empresa.com", resultado.get().getEmail());
+   }
 }
 ```
 
