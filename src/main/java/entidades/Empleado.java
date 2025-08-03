@@ -1,27 +1,44 @@
 package entidades;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.io.ApplicationResourceLoader;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@Table(name = "empleados")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Empleado {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 100)
     private String nombre;
+
+    @Column(nullable = false, length = 100)
     private String apellido;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(name = "fehca_contratacion", nullable = false)
+    @Temporal(TemporalType.DATE)
     private LocalDate fechaContratacion;
+
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal salario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "departamento_id")
     private Departamento departamento;
 
     @ManyToMany
