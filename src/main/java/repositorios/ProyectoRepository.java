@@ -2,6 +2,8 @@ package repositorios;
 
 import entidades.Proyecto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -11,7 +13,16 @@ import java.util.Optional;
 @Repository
 public interface ProyectoRepository extends JpaRepository<Proyecto, Long> {
     Optional<Proyecto> findByNombre(String nombre);
+    Optional<Proyecto> findById(Long id);
     List<Proyecto> findByFechaInicioAfter(LocalDate fechaInicio);
     List<Proyecto> findByFechaFinaBefore(LocalDate fechaFina);
     List<Proyecto> findByEmpleados_Id(Long empleadoId);
+
+    @Query("SELECT p FROM Proyecto p WHERE p.fechaInicio <= :fechaActual AND (p.fechaFina IS NULL OR p.fechaFina >= :fechaActual)")
+    List<Proyecto> findProyectosActivos(@Param("fechaActual") LocalDate fechaActual);
+
+    @Query("SELECT p FROM Proyecto p WHERE SIZE(p.empleados) > :cantidad")
+    List<Proyecto> findProyectosConMasDeXEmpleados(@Param("cantidad") int cantidad);
+
+
 }
