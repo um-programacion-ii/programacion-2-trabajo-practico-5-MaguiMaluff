@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface DepartamentoRepository extends JpaRepository<Departamento, Long> {
     Optional<Departamento> findByNombre(String nombre);
-    List<Empleado> findByEmpleadoId(Long empleadoId);
+    List<Departamento> findByEmpleadoId(Long empleadoId);
 
     @Query("SELECT d FROM Departamento d WHERE d.empleados IS EMPTY")
     List<Departamento> findDepartamentosSinEmpleados();
