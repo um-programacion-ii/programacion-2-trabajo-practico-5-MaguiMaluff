@@ -1,6 +1,8 @@
 package controladores;
 
 import entidades.Empleado;
+import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import servicios.EmpleadoService;
 
@@ -9,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/empleados")
+@Validated
 public class EmpleadoController {
     private final EmpleadoService empleadoService;
 
@@ -27,7 +30,7 @@ public class EmpleadoController {
     }
 
     @PostMapping
-    public Empleado crear(@RequestBody Empleado empleado) {
+    public Empleado crear(@Valid @RequestBody Empleado empleado) {
         return empleadoService.guardar(empleado);
     }
 

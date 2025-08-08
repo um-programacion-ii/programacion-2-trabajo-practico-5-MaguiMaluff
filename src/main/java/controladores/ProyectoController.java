@@ -1,15 +1,17 @@
 package controladores;
 
-import entidades.Departamento;
 import entidades.Proyecto;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import servicios.ProyectoService;
+import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/proyectos")
+@Validated
 public class ProyectoController {
     private final ProyectoService proyectoService;
 
@@ -33,12 +35,12 @@ public class ProyectoController {
     }
 
     @PostMapping
-    public Proyecto crear(@RequestBody Proyecto proyecto){
+    public Proyecto crear(@Valid @RequestBody Proyecto proyecto){
         return proyectoService.guardar(proyecto);
     }
 
     @PutMapping("/{id}")
-    public Proyecto actualizar(@PathVariable Long id, @RequestBody Proyecto proyecto){
+    public Proyecto actualizar(@PathVariable Long id,@Valid @RequestBody Proyecto proyecto){
         return proyectoService.actualizar(id, proyecto);
     }
 

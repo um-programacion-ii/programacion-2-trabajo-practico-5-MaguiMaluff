@@ -1,6 +1,8 @@
 package controladores;
 
 import entidades.Departamento;
+import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import servicios.DepartamentoService;
 
@@ -8,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/departamentos")
+@Validated
 public class DepartamentoController {
     private final DepartamentoService departamentoService;
 
@@ -26,12 +29,12 @@ public class DepartamentoController {
     }
 
     @PostMapping
-    public Departamento crear(@RequestBody Departamento departamento) {
+    public Departamento crear(@Valid @RequestBody Departamento departamento) {
         return departamentoService.guardar(departamento);
     }
 
     @PutMapping("/{id}")
-    public Departamento actualizar(@PathVariable Long id, @RequestBody Departamento departamento) {
+    public Departamento actualizar(@PathVariable Long id,@Valid @RequestBody Departamento departamento) {
         return departamentoService.actualizar(id, departamento);
     }
 
