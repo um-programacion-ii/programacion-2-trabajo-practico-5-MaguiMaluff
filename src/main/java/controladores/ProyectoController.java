@@ -1,6 +1,7 @@
 package controladores;
 
 import entidades.Proyecto;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import servicios.ProyectoService;
@@ -35,6 +36,7 @@ public class ProyectoController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Proyecto crear(@Valid @RequestBody Proyecto proyecto){
         return proyectoService.guardar(proyecto);
     }
@@ -45,6 +47,7 @@ public class ProyectoController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Long id){
         proyectoService.eliminar(id);
     }

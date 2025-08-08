@@ -2,6 +2,7 @@ package controladores;
 
 import entidades.Departamento;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import servicios.DepartamentoService;
@@ -29,6 +30,7 @@ public class DepartamentoController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Departamento crear(@Valid @RequestBody Departamento departamento) {
         return departamentoService.guardar(departamento);
     }
@@ -39,6 +41,7 @@ public class DepartamentoController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Long id) {
         departamentoService.eliminar(id);
     }

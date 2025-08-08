@@ -2,6 +2,7 @@ package controladores;
 
 import entidades.Empleado;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import servicios.EmpleadoService;
@@ -30,6 +31,7 @@ public class EmpleadoController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Empleado crear(@Valid @RequestBody Empleado empleado) {
         return empleadoService.guardar(empleado);
     }
@@ -40,6 +42,7 @@ public class EmpleadoController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Long id) {
         empleadoService.eliminar(id);
     }
