@@ -1,6 +1,7 @@
 package serviciosImpl;
 
 import entidades.Departamento;
+import org.springframework.transaction.annotation.Transactional;
 import repositorios.DepartamentoRepository;
 import excepciones.DepartamentoNoEncontradoException;
 import excepciones.DepartamentoDuplicadoException;
@@ -11,6 +12,7 @@ import servicios.DepartamentoService;
 import java.util.List;
 
 @Service
+@Transactional
 public class DepartamentoServiceImpl implements DepartamentoService {
 
     private final DepartamentoRepository departamentoRepository;
