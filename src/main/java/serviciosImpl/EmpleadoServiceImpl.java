@@ -5,6 +5,7 @@ import entidades.Empleado;
 import excepciones.EmailDuplicadoException;
 import excepciones.EmpleadoNoEncontradoException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import repositorios.DepartamentoRepository;
 import repositorios.EmpleadoRepository;
 import servicios.EmpleadoService;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Service
+@Transactional
 public class EmpleadoServiceImpl implements EmpleadoService {
     private final EmpleadoRepository empleadoRepository;
     private final DepartamentoRepository departamentoRepository;

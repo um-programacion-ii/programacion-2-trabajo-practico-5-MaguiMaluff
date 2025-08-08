@@ -1,6 +1,7 @@
 package serviciosImpl;
 
 import entidades.Proyecto;
+import org.springframework.transaction.annotation.Transactional;
 import repositorios.ProyectoRepository;
 import excepciones.ProyectoNoEncontradoException;
 import excepciones.ProyectoDuplicadoException;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Transactional
 public class ProyectoServiceImpl implements ProyectoService {
 
     private final ProyectoRepository proyectoRepository;
