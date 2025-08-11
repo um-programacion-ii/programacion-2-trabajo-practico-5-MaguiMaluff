@@ -1062,6 +1062,217 @@ Cada archivo debe seguir este formato:
 [Repetir estructura para cada prompt]
 ```
 
+### Issue 36, modificación del README con instrucciones de instalación
+
+## Instrucciones de Instalación
+
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/um-programacion-ii/programacion-2-trabajo-practico-5-MaguiMaluff.git
+   ```
+
+2. **Verificar requisitos previos**
+   - Tener instalado **Java 21** o superior.
+   - Tener instalado **Maven 3.9.0** o superior.
+   - Tener instalado **Docker** y **Docker Compose** para usar MySQL o PostgreSQL.
+
+3**Instalar dependencias**
+   - Son instaladas por Maven al ejecutar el sistema.
+
+---
+
+## Requisitos del Sistema
+
+- **Java:** 21 o superior
+- **Maven:** 3.9.0 o superior
+- **Docker:** 24.0 o superior
+- **Docker Compose:** incluido en Docker Desktop
+- **Sistema Operativo:** Windows, Linux o macOS
+
+---
+## Documentación de Endpoints
+
+### Empleados
+
+| Método | Endpoint                                      | Descripción                                        | Parámetros         |
+|--------|-----------------------------------------------|----------------------------------------------------|--------------------|
+| GET    | `/api/empleados`                              | Listar todos los empleados                         |                    |
+| GET    | `/api/empleados/{id}`                         | Consultar empleado por ID                          | `{id}`             |
+| POST   | `/api/empleados`                              | Crear empleado                                     | Body (JSON)        |
+| PUT    | `/api/empleados/{id}`                         | Modificar empleado por ID                          | `{id}`, Body (JSON)|
+| DELETE | `/api/empleados/{id}`                         | Eliminar empleado por ID                           | `{id}`             |
+| GET    | `/api/empleados/departamento/{nombre}`        | Listar empleados por nombre de departamento        | `{nombre}`         |
+| GET    | `/api/empleados/salario?min=X&max=Y`          | Listar empleados por rango salarial                | `min`, `max`       |
+| GET    | `/api/empleados/promedio/{departamentoId}`    | Salario promedio del departamento                  | `{departamentoId}` |
+
+---
+
+### Departamentos
+
+| Método | Endpoint                                 | Descripción                                   | Parámetros         |
+|--------|------------------------------------------|-----------------------------------------------|--------------------|
+| GET    | `/api/departamentos`                     | Listar todos los departamentos                |                    |
+| GET    | `/api/departamentos/{id}`                | Consultar departamento por ID                 | `{id}`             |
+| POST   | `/api/departamentos`                     | Crear departamento                            | Body (JSON)        |
+| PUT    | `/api/departamentos/{id}`                | Modificar departamento por ID                 | `{id}`, Body (JSON)|
+| DELETE | `/api/departamentos/{id}`                | Eliminar departamento por ID                  | `{id}`             |
+| GET    | `/api/departamentos/empleado/{id}`       | Departamentos asociados a un empleado por ID  | `{id}` (empleado)  |
+
+---
+
+### Proyectos
+
+| Método | Endpoint                                 | Descripción                                   | Parámetros         |
+|--------|------------------------------------------|-----------------------------------------------|--------------------|
+| GET    | `/api/proyectos`                         | Listar todos los proyectos                    |                    |
+| GET    | `/api/proyectos/{id}`                    | Consultar proyecto por ID                     | `{id}`             |
+| GET    | `/api/proyectos/nombre/{nombre}`         | Consultar proyecto por nombre                 | `{nombre}`         |
+| POST   | `/api/proyectos`                         | Crear proyecto                               | Body (JSON)        |
+| PUT    | `/api/proyectos/{id}`                    | Modificar proyecto por ID                    | `{id}`, Body (JSON)|
+| DELETE | `/api/proyectos/{id}`                    | Eliminar proyecto por ID                     | `{id}`             |
+| GET    | `/api/proyectos/fecha/despues?fechaInicio=YYYY-MM-DD` | Proyectos con inicio después de fecha         | `fechaInicio`      |
+| GET    | `/api/proyectos/fecha/antes?fechaFin=YYYY-MM-DD` | Proyectos con fin antes de fecha              | `fechaFin`         |
+| GET    | `/api/proyectos/empleado/{id}`           | Proyectos asociados a un empleado por ID      | `{id}` (empleado)  |
+
+---
+
+## Ejemplo de uso: agregar, consultar y modificar empleados
+
+### 1. Agregar un empleado
+
+```bash
+curl -X POST http://localhost:8080/api/empleados \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Juan",
+    "apellido": "Pérez",
+    "email": "juan.perez@empresa.com",
+    "fechaContratacion": "2025-01-10",
+    "salario": 50000.00,
+    "departamento": {
+      "id": 1
+    }
+  }'
+```
+
+### 2. Consultar todos los empleados
+
+```bash
+curl http://localhost:8080/api/empleados
+```
+
+### 3. Consultar empleado por ID
+
+```bash
+curl http://localhost:8080/api/empleados/1
+```
+
+### 4. Modificar empleado
+
+```bash
+curl -X PUT http://localhost:8080/api/empleados/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Juan",
+    "apellido": "Pérez",
+    "email": "juan.perez@empresa.com",
+    "fechaContratacion": "2025-01-10",
+    "salario": 52000.00,
+    "departamento": {
+      "id": 2
+    }
+  }'
+```
+
+### 5. Eliminar empleado
+
+```bash
+curl -X DELETE http://localhost:8080/api/empleados/1
+```
+
+---
+
+## Ejemplo de uso: agregar departamento
+
+```bash
+curl -X POST http://localhost:8080/api/departamentos \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Recursos Humanos",
+    "descripcion": "Departamento de recursos humanos"
+  }'
+```
+
+---
+
+## Ejemplo de uso: agregar proyecto
+
+```bash
+curl -X POST http://localhost:8080/api/proyectos \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Proyecto A",
+    "descripcion": "Implementación de sistema",
+    "fechaInicio": "2025-01-15",
+    "fechaFin": "2025-04-30"
+  }'
+```
+
+---
+
+## Ejecución, Testing y Despliegue con Docker Compose
+
+### 1. Requisitos previos
+- Tener instalado Docker y Docker Compose.
+- Puerto 3306 (MySQL) y 5432 (PostgreSQL) libres.
+
+### 2. Levantar las bases de datos con Docker Compose
+
+Ejecutar los siguientes comandos desde la carpeta src:
+
+```bash
+# Iniciar los contenedores de MySQL y PostgreSQL
+docker compose up -d
+
+# Verificar el estado de los contenedores
+docker compose ps
+
+# (Opcional) Ver logs en tiempo real
+docker compose logs -f
+```
+
+### 3. Ejecución de la aplicación con diferentes perfiles
+
+- **H2 (desarrollo):**
+  ```bash
+  ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+  ```
+- **MySQL (requiere contenedor levantado):**
+  ```bash
+  ./mvnw spring-boot:run -Dspring-boot.run.profiles=mysql
+  ```
+- **PostgreSQL (requiere contenedor levantado):**
+  ```bash
+  ./mvnw spring-boot:run -Dspring-boot.run.profiles=postgres
+  ```
+
+### 4. Testing automático del proyecto
+
+Para ejecutar todos los tests:
+
+```bash
+./mvnw test
+```
+
+### 5. Detener y limpiar contenedores
+
+```bash
+# Detener los contenedores
+docker compose down
+
+# Detener y eliminar los volúmenes de datos
+docker compose down -v
+```
 ## 📝 Licencia
 
 Este trabajo es parte del curso de Programación II de Ingeniería en Informática. Uso educativo únicamente.
