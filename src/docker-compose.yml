@@ -1,19 +1,29 @@
+# --------------------------------------------------------
+# docker-compose.yml
+#
+# Este archivo define los servicios y recursos necesarios
+# para levantar los contenedores de bases de datos MySQL
+# y PostgreSQL usados en el proyecto de empleados.
+#
+# Cada servicio expone su puerto por defecto y persiste datos
+# en volúmenes dedicados. Ambos se comunican en una red interna.
+# --------------------------------------------------------
 
 services:
   mysql:
     image: mysql:8.0
     container_name: empleados_mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: empleados_db
-      MYSQL_USER: empleados_user
-      MYSQL_PASSWORD: empleados_pass
+      MYSQL_ROOT_PASSWORD: root_password       # Contraseña del usuario root de MySQL
+      MYSQL_DATABASE: empleados_db             # Base de datos que se crea al iniciar el contenedor
+      MYSQL_USER: empleados_user               # Usuario adicional para la base de datos
+      MYSQL_PASSWORD: empleados_pass           # Contraseña del usuario adicional
     ports:
-      - "3306:3306"
+      - "3306:3306"                            # Puerto local 3306 expuesto al contenedor
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql              # Persistencia de datos en volumen dedicado
     networks:
-      - empleados_network
+      - empleados_network                      # Red interna para comunicación entre servicios
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
@@ -23,24 +33,26 @@ services:
     image: postgres:16
     container_name: empleados_postgres
     environment:
-      POSTGRES_DB: empleados_db
-      POSTGRES_USER: empleados_user
-      POSTGRES_PASSWORD: empleados_pass
+      POSTGRES_DB: empleados_db                # Base de datos creada al iniciar el contenedor
+      POSTGRES_USER: empleados_user            # Usuario adicional para la base de datos
+      POSTGRES_PASSWORD: empleados_pass        # Contraseña del usuario adicional
     ports:
-      - "5432:5432"
+      - "5432:5432"                            # Puerto local 5432 expuesto al contenedor
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data # Persistencia de datos en volumen dedicado
     networks:
-      - empleados_network
+      - empleados_network                      # Red interna compartida
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U empleados_user -d empleados_db"]
       timeout: 20s
       retries: 10
 
+# Volúmenes para persistir datos de las bases de datos
 volumes:
   mysql_data:
   postgres_data:
 
+# Red interna para que los servicios puedan comunicarse entre sí
 networks:
   empleados_network:
     driver: bridge
