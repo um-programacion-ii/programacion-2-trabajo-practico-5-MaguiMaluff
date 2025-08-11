@@ -115,6 +115,7 @@ Para el **Issue 22: Manejo de Excepciones HTTP**, necesitas una clase global que
 ```java name=excepciones/GlobalExceptionHandler.java
 package excepciones;
 
+import ar.edu.um.programacion2.tp5.excepciones.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -133,7 +134,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleValidationException(MethodArgumentNotValidException ex) {
         Map<String, String> fieldErrors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->
-            fieldErrors.put(error.getField(), error.getDefaultMessage())
+                fieldErrors.put(error.getField(), error.getDefaultMessage())
         );
 
         Map<String, Object> body = new HashMap<>();

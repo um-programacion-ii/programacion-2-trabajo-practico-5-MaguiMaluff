@@ -6,7 +6,7 @@ spring:
     password: empleados_pass
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
