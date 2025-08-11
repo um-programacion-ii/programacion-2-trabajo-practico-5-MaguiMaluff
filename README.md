@@ -772,62 +772,62 @@ networks:
 #### Ejemplo de Test
 
 ```java
-import repositorios.EmpleadoRepository;
+import ar.edu.um.programacion2.tp5.repositorios.EmpleadoRepository;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
 class EmpleadoServiceIntegrationTest {
-   private final EmpleadoService empleadoService;
-   private final EmpleadoRepository empleadoRepository;
-   private final DepartamentoRepository departamentoRepository;
+    private final EmpleadoService empleadoService;
+    private final EmpleadoRepository empleadoRepository;
+    private final DepartamentoRepository departamentoRepository;
 
-   public EmpleadoServiceIntegrationTest(EmpleadoService empleadoService,
-                                         EmpleadoRepository empleadoRepository,
-                                         DepartamentoRepository departamentoRepository) {
-      this.empleadoService = empleadoService;
-      this.empleadoRepository = empleadoRepository;
-      this.departamentoRepository = departamentoRepository;
-   }
+    public EmpleadoServiceIntegrationTest(EmpleadoService empleadoService,
+                                          EmpleadoRepository empleadoRepository,
+                                          DepartamentoRepository departamentoRepository) {
+        this.empleadoService = empleadoService;
+        this.empleadoRepository = empleadoRepository;
+        this.departamentoRepository = departamentoRepository;
+    }
 
-   @Test
-   void cuandoGuardarEmpleado_entoncesSePersisteCorrectamente() {
-      // Arrange
-      Departamento departamento = new Departamento();
-      departamento.setNombre("IT");
-      departamento.setDescripcion("Departamento de Tecnología");
-      departamento = departamentoRepository.save(departamento);
+    @Test
+    void cuandoGuardarEmpleado_entoncesSePersisteCorrectamente() {
+        // Arrange
+        Departamento departamento = new Departamento();
+        departamento.setNombre("IT");
+        departamento.setDescripcion("Departamento de Tecnología");
+        departamento = departamentoRepository.save(departamento);
 
-      Empleado empleado = new Empleado();
-      empleado.setNombre("Juan");
-      empleado.setApellido("Pérez");
-      empleado.setEmail("juan.perez@empresa.com");
-      empleado.setFechaContratacion(LocalDate.now());
-      empleado.setSalario(new BigDecimal("50000.00"));
-      empleado.setDepartamento(departamento);
+        Empleado empleado = new Empleado();
+        empleado.setNombre("Juan");
+        empleado.setApellido("Pérez");
+        empleado.setEmail("juan.perez@empresa.com");
+        empleado.setFechaContratacion(LocalDate.now());
+        empleado.setSalario(new BigDecimal("50000.00"));
+        empleado.setDepartamento(departamento);
 
-      // Act
-      Empleado empleadoGuardado = empleadoService.guardar(empleado);
+        // Act
+        Empleado empleadoGuardado = empleadoService.guardar(empleado);
 
-      // Assert
-      assertNotNull(empleadoGuardado.getId());
-      assertEquals("juan.perez@empresa.com", empleadoGuardado.getEmail());
-      assertTrue(empleadoRepository.existsById(empleadoGuardado.getId()));
-   }
+        // Assert
+        assertNotNull(empleadoGuardado.getId());
+        assertEquals("juan.perez@empresa.com", empleadoGuardado.getEmail());
+        assertTrue(empleadoRepository.existsById(empleadoGuardado.getId()));
+    }
 
-   @Test
-   void cuandoBuscarPorEmailExistente_entoncesRetornaEmpleado() {
-      // Arrange
-      Empleado empleado = crearEmpleadoDePrueba();
-      empleadoRepository.save(empleado);
+    @Test
+    void cuandoBuscarPorEmailExistente_entoncesRetornaEmpleado() {
+        // Arrange
+        Empleado empleado = crearEmpleadoDePrueba();
+        empleadoRepository.save(empleado);
 
-      // Act
-      Optional<Empleado> resultado = empleadoRepository.findByEmail("test@empresa.com");
+        // Act
+        Optional<Empleado> resultado = empleadoRepository.findByEmail("test@empresa.com");
 
-      // Assert
-      assertTrue(resultado.isPresent());
-      assertEquals("test@empresa.com", resultado.get().getEmail());
-   }
+        // Assert
+        assertTrue(resultado.isPresent());
+        assertEquals("test@empresa.com", resultado.get().getEmail());
+    }
 }
 ```
 
